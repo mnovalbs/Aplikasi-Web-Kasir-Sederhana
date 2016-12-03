@@ -12,5 +12,10 @@
       return $this->db->query($query);
     }
 
+    public function escape($str)
+    {
+      return "'".$this->db->real_escape_string($str)."'";
+    }
+
   }
 ?>

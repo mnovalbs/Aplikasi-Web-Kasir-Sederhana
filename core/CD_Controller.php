@@ -12,9 +12,11 @@
   class CD_Controller{
 
     public $load;
+    public $config;
 
     public function __construct(){
       $this->load = new CD_Loader();
+      $this->config = new CD_Config();
     }
 
   }
