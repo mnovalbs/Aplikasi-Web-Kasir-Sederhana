@@ -2,7 +2,8 @@
 
   function base_url($str = '')
   {
-    $root_url = 'http://tubes.dev/';
+    global $config;
+    $root_url = $config['url']['base_url'];
     return $root_url.$str;
   }
 

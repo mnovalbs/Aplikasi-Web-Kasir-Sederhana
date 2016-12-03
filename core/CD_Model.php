@@ -5,9 +5,10 @@
 
     public function __construct()
     {
-      require_once('config/config.php');
-      $config = $config['database'];
-      $this->db = new Database($config['host'], $config['user'], $config['pass'], $config['name']);
+      // require_once('config/config.php');
+      global $config;
+      $configs = $config['database'];
+      $this->db = new Database($configs['host'], $configs['user'], $configs['pass'], $configs['name']);
     }
 
   }

@@ -18,6 +18,12 @@
       }
     }
 
+    public function listPetugas()
+    {
+      $this->db->query("SELECT * FROM petugas");
+      return $this->db->get_all();
+    }
+
   }
 
 ?>

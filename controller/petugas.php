@@ -34,6 +34,12 @@
       return $this->load->model('petugas_model')->cek_login($email, $password);
     }
 
+    public function listPetugas()
+    {
+      $petugas = $this->load->model('petugas_model')->listPetugas();
+      print_r($petugas);
+    }
+
   }
 
 ?>

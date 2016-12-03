@@ -1,6 +1,7 @@
 <?php
-  require_once('helper/cd_helper.php');
+  include_once('config/config.php');
   require_once('core/CD_Config.php');
+  require_once('helper/cd_helper.php');
   require_once('core/CD_Controller.php');
   require_once('core/CD_Loader.php');
   require_once('core/CD_Database.php');
