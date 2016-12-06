@@ -27,6 +27,6 @@ Options +FollowSymLinks -MultiViews
 RewriteBase /
 ErrorDocument 404 /404.php
 
-RewriteRule ^([a-zA-Z0-9/-]+)?$ /index.php?params=$1 [NC,L]
+RewriteRule ^([a-zA-Z0-9_/-]+)?$ /index.php?params=$1 [NC,L]
 
 </IfModule>

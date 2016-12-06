@@ -1,4 +1,5 @@
 <?php
+  defined('base_path') OR die('Akses langsung tidak dapat dilakukan');
   /************************
     Codedicate Controller
     Officially made by :
@@ -8,15 +9,25 @@
     - Khanif Fauzi Pambudi
     - Primanggala Surya
   ************************/
+  require_once('core/CD_Config.php');
+  require_once('core/CD_Loader.php');
 
   class CD_Controller{
-
-    public $load;
+    private static $instance;
     public $config;
+    public $load;
+    public $input;
 
-    public function __construct(){
+    public function __construct()
+    {
+      self::$instance = $this;
       $this->load = new CD_Loader();
       $this->config = new CD_Config();
+    }
+
+    public static function & get_instance()
+    {
+      return self::$instance;
     }
 
   }

@@ -1,7 +1,7 @@
 <?php
-  $this->view('header');
-
+  $this->load->view('header');
+  echo $num_rows;
   echo "Nama : ".$aku;
 
-  $this->view('footer');
+  $this->load->view('footer');
 ?>

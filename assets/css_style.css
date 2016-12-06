@@ -1,0 +1,86 @@
+/*
+  Codedicate Copyright Style
+*/
+@font-face {
+  font-family: 'Helvetica';
+  font-style: normal;
+  font-weight: 300;
+  src: local('fonts/HelveticaNeue.ttf'), format('truetype');
+}
+html {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}
+*{
+  font-size: 14px;
+  font-family: Helvetica;
+  outline: none;
+}
+input {
+  font-size: 14px;
+}
+button {
+  padding: 8px 15px;
+  background: #039BE5;
+  color: #fff;
+  border:1px solid #0288D1;
+  border-radius: 3px;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:focus{
+  background: #01579B;
+}
+.cd-form .input input{
+  width: 100%;
+  padding: 10px;
+  display: block;
+  border: 1px solid #ECEFF1;
+}
+.cd-form .input input:focus{
+  border: 1px solid #01579B;
+  box-shadow: 0 0 0 transparent !important;
+  outline: none;
+}
+.cd-form .input{
+  margin-bottom: 10px;
+}
+.cd-container{
+  max-width: 900px;
+  margin:0 auto;
+}
+.peringatan {
+  background: #eee;
+  padding: 15px 15px;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+.merah{
+  background: #F44336;
+  color: #fff;
+}
+.hijau{
+  background: #009688;
+  color: #fff;
+}
+.form-login{
+  max-width: 400px;
+  margin: 0 auto;
+  left: 0px;
+  right: 0px;
+  position: absolute;
+}
+.form-login .cd-form {
+    background: #fff;
+    padding: 25px;
+    border-radius: 5px;
+}
+.form-login .cd-form button {
+    width: 100%;
+}

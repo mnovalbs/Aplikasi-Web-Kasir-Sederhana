@@ -1,4 +1,5 @@
 <?php
+  defined('base_path') OR die('Akses langsung tidak dapat dilakukan');
   class CD_Model{
 
     public $db;
