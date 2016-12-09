@@ -72,7 +72,7 @@
           }
           else if($rule == 'alpha_dash_space')
           {
-            if (! preg_match('/^[a-zA-Z\s]+$/', $post_input))
+            if (!preg_match('/^[a-zA-Z\s]+$/', $post_input))
             {
               $this->sukses = false;
               array_push($this->error_message, $label." hanya dapat berisi huruf dan spasi");

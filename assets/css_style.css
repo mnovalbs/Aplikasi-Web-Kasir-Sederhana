@@ -22,6 +22,22 @@ html {
   font-family: Helvetica;
   outline: none;
 }
+img{
+  max-width: 100%;
+  height: auto;
+}
+body{
+  background: #CFD8DC;
+  margin: 0px;
+  padding: 0px;
+}
+a{
+  color: #2196F3;
+  text-decoration: none;
+}
+a:hover{
+  color: #1565C0;
+}
 input {
   font-size: 14px;
 }
@@ -83,4 +99,161 @@ button:focus{
 }
 .form-login .cd-form button {
     width: 100%;
+}
+.cd-container {
+    background: #fff;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 3px;
+}
+#menu-atas li a {
+    display: block;
+    /* background: #ECEFF1; */
+    margin: 5px;
+    color: #78909C;
+    font-weight: bold;
+    /* padding: 12px; */
+    /* border-radius: 3px; */
+    position: relative;
+}
+#menu-atas li a i {
+    /*position: absolute;*/
+    left: 6px;
+    padding: 8px;
+    font-size: 12px;
+    top: 6px;
+    border-radius: 100%;
+    /* bottom: 0px; */
+    background: #78909C;
+    color: #fff;
+    margin-right: 5px;
+}
+/*#menu-atas li a:hover{
+    background: #90A4AE;
+    color: #fff;
+}*/
+#menu-atas li a:hover i, #menu-atas li a.aktif i{
+    background: #F4511E;
+}
+#menu-atas li a:hover, #menu-atas li a.aktif{
+    color: #f4511e;
+}
+#menu-atas li {
+    display: block;
+    float: left;
+    width: 20%;
+    text-align: center;
+}
+#menu-atas {
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+    overflow: hidden;
+}
+#kategori-list {
+    overflow: hidden;
+}
+.li-kategori > span {
+    position: absolute;
+    right: 10px;
+}
+.li-kategori:hover {
+    color: #f4511e;
+}
+.li-kategori {
+    width: 33.333%;
+    float: left;
+    font-weight: bold;
+    padding: 10px;
+    position: relative;
+    cursor: pointer;
+}
+h3.subtitle {
+    text-align: center;
+    background: #e0eaef;
+    padding: 10px;
+    color: #78909c;
+    font-size: 18px;
+    margin: 20px 0;
+}
+.cd-table {
+    width: 100%;
+}
+.petugas .detail-petugas label {
+    font-weight: bold;
+    display: block;
+    font-size: 17px;
+    text-transform: uppercase;
+}
+.petugas .huruf-petugas {
+    font-weight: bold;
+    padding: 20px;
+    font-size: 55px;
+    color: #f4511e;
+}
+.petugas {
+    width: 25%;
+    text-align: center;
+    background: rgba(224, 234, 239, 0.71);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 1px 1px 3px #bdbdbd;
+    border: 1px solid #ccc;
+    position: relative;
+}
+.petugas .edit-petugas a {
+    display: block;
+    padding: 10px;
+    background: #f4511e;
+    color: #fff;
+    margin-top: 10px;
+}
+.petugas .detail-petugas small {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: #f4511e;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 0 0 5px 0;
+}
+#add-kategori label {
+    display: inline-block;
+    padding: 6px;
+    width: 28px;
+    text-align: center;
+    border-radius: 100%;
+    background: #78909c;
+    color: #eee;
+    cursor: pointer;
+}
+#add-kategori input {
+    padding: 5px;
+    border: 0px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+#add-kategori label:hover {
+    background: #f4511e;
+    color: #fff;
+}
+#add-kategori input:focus {
+    border-color: #f4511e;
+    color: #f4511e;
+}
+#add-kategori {
+    margin: 20px 0;
+    text-align: center;
+}
+#error-message {
+    position: fixed;
+    bottom: 0px;
+    right: 10px;
+    max-width: 400px;
+}
+.li-kategori table{
+  width: 100%;
+}
+.li-kategori label {
+    padding: 2px 0;
+    display: inline-block;
 }
