@@ -3,10 +3,9 @@
 ?>
 
   <h3 class='subtitle'>Kategori List</h3>
-  <div id='error-message'></div>
-  <form id='add-kategori'>
+  <div id='add-kategori'>
     <input maxlength='50' placeholder='Tambah kategori'/> <label><i class='fa fa-plus'></i></label>
-  </form>
+  </div>
   <div id='kategori-list'>
   <?php
     foreach ($list_kategori as $kategori) {

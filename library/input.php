@@ -6,7 +6,7 @@
       $ret = '';
       if(!empty($_POST[$str]))
       {
-        $ret = $_POST[$str];
+        $ret = strip_tags(trim($_POST[$str]));
       }
       return $ret;
     }

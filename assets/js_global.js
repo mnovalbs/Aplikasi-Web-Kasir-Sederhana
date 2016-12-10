@@ -66,6 +66,19 @@ function base_url(str)
 //   get_list_kategori();
 // });
 
+$("#pilih-kategori").ready(function(){
+  $.ajax({
+    url : base_url('admin/list_kategori'),
+    dataType : 'json',
+    success : function(data){
+      var del = 500;
+      $.each(data, function(index, element){
+        $("#pilih-kategori").append("<option value='"+element.idkategori+"'>"+element.nama+"</option>");
+      });
+    }
+  });
+});
+
 function get_list_kategori()
 {
   var hasil = '';
@@ -156,6 +169,12 @@ $(document).ready(function(){
   $(".form-login").parents('.cd-container').removeClass('cd-container');
   $(".form-login").parents('body').css('background','#CFD8DC');
 
+  $("small").each(function(){
+    if($(this).text() == 'Administrator'){
+      $(this).css('background','#2196F3');
+    }
+  });
+
   $("#menu-atas li a").each(function(){
     var thisHref = $(this).attr('href');
     var locationNow = window.location.href;
@@ -181,6 +200,21 @@ $(window).bind("load resize", function(){
 $("body").bind("DOMSubtreeModified", function() {
   form_login_location();
 
+  $(".bg-hitam").click(function(){
+    closeModal();
+  });
+
+  function closeModal()
+  {
+    $(".modal").animate({
+      top: '-100px',
+    },300,function(){
+      $(".modal").hide();
+      $(".bg-hitam").remove();
+    })
+    reset_alert();
+  }
+
   $(".li-kategori .do_edit").click(function(){
     var kategori_id = $(this).parents('.li-kategori').attr('kategori-id');
     var kategori_name = $(this).parents('.li-kategori').find('input').val();
@@ -202,7 +236,7 @@ $("body").bind("DOMSubtreeModified", function() {
         {
           var baru = '';
           baru += "<table><tr><td width='30'><span>";
-          baru += "<a href='#!' class='hapus'><i class='fa fa-trash'></i></a> ";
+          baru += "<a href='#!' class='hapus' onclick='delete_kategori("+kategori_id+")'><i class='fa fa-trash'></i></a> ";
           baru += "<a href='#!' class='ubah'><i class='fa fa-pencil'></i></a>";
           baru += "</span></td>";
           baru += "<td><label><span class='nama'>"+kategori_name+"</span></label></td></tr></table>";
@@ -263,4 +297,105 @@ function get_list_petugas()
       });
     }
   });
+}
+
+function openModal(str)
+{
+  $(".bg-hitam").remove();
+  $("#"+str).after("<div class='bg-hitam'></div>");
+  $("#"+str).show();
+  $("#"+str).animate({
+    top: 30,
+  },300);
+}
+
+function tambah_barang()
+{
+  var nama = $("#nama-barang").val();
+  var deskripsi = $("#deskripsi-barang").val();
+  var kategori = $("#pilih-kategori").val();
+  var harga = $("#harga-barang").val();
+  var stok = $("#stok-barang").val();
+  $("#tambah-barang button").html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Loading&hellip;');
+
+  $.ajax({
+    url : base_url('admin/add_barang'),
+    type : 'POST',
+    dataType : 'json',
+    data : {nama:nama, deskripsi:deskripsi, kategori:kategori, harga:harga, stok:stok},
+    success : function(data){
+      reset_alert();
+      if(data.success){
+        add_alert("<div class='peringatan hijau'>Barang berhasil ditambahkan</div>");
+        get_list_barang();
+        $("#nama-barang").val('');
+        $("#deskripsi-barang").val('');
+        $("#pilih-kategori").val('');
+        $("#harga-barang").val('');
+        $("#stok-barang").val('');
+      }else{
+        $.each(data.error, function(index, element){
+          add_alert("<div class='peringatan merah'>"+element+"</div>");
+        });
+      }
+      $("#tambah-barang button").html('Tambah');
+    }
+  });
+}
+
+function get_list_barang(start = 0, limit = 10)
+{
+  $("#list-barang tbody").html('');
+
+  $.get(base_url('admin/list_barang/'+start+'/'+limit), function(data){
+    if(data){
+      var no = start+1;
+      var total_barang = 0;
+      $.each(data, function(index, element){
+        var tr = '<tr>';
+        tr += '<td>'+no+'</td>';
+        tr += '<td>'+element.nama_barang+'</td>';
+        tr += '<td>'+element.nama_kategori+'</td>';
+        tr += '<td>'+toRupiah(parseInt(element.harga))+'</td>';
+        tr += '<td>'+element.stok+'</td>';
+        tr += '<td>Action</td>';
+        tr += '</tr>';
+        $("#list-barang tbody").append(tr);
+        no++;
+        total_barang = element.total_barang;
+      });
+
+      // $("#navigasi > label").remove();
+
+      // alert(start+","+limit);
+
+      if(start > 0){
+        // if($("#navigasi .prev").length == 0){
+        //   $("#navigasi").append("<label class='prev' onclick='get_list_barang("+(start-limit)+","+limit+")'>Prev</label>");
+        // }
+        $("#navigasi .prev").attr('onclick','get_list_barang('+(start-limit)+','+limit+')');
+        $("#navigasi .prev").removeClass('non-aktif');
+      }else{
+        $("#navigasi .prev").removeAttr('onclick');
+        $("#navigasi .prev").addClass('non-aktif');
+      }
+
+      if(start+limit < total_barang){
+        // $("#navigasi").append("<label class='next' onclick='get_list_barang("+(start+limit)+","+limit+")'>Next</label>");
+        $("#navigasi .next").attr('onclick','get_list_barang('+(start+limit)+','+limit+')');
+        $("#navigasi .next").removeClass('non-aktif');
+      }else{
+        $("#navigasi .next").removeAttr('onclick');
+        $("#navigasi .next").addClass('non-aktif');
+      }
+
+    }else{
+      alert("Data tidak ditemukan");
+    }
+  }, 'json');
+}
+
+function toRupiah(isi)
+{
+  return 'Rp '+isi.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
 }
