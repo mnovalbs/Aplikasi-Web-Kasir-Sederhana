@@ -6,6 +6,14 @@
     public function index()
     {
       $this->arahLogin();
+      $this->load->model('petugas_model');
+
+      $data['current_invoice'] = $this->petugas_model->get_current_invoice();
+      $data['list_barang'] = $this->petugas_model->list_barang();
+      $site['custom_title'] = "Transaksi";
+      $this->load->view('header',$site);
+      $this->load->view('petugas/petugas_home',$data);
+      $this->load->view('footer');
     }
 
     public function login()
@@ -102,6 +110,49 @@
           die(redirect('petugas/login'));
         }
       }
+    }
+
+    public function list_barang($start = 0, $limit = 5)
+    {
+      $this->arahLogin();
+      $this->load->model('petugas_model');
+      $start = (int)$start;
+      $limit = (int)$limit;
+      $data['list_barang'] = $this->petugas_model->list_barang($start, $limit);
+      echo json_encode($data['list_barang']);
+    }
+
+    public function cari_barang()
+    {
+      $this->arahLogin();
+      $this->load->model('petugas_model');
+      $this->load->library('input');
+
+      $q = $this->input->post('q');
+      $hasil = $this->petugas_model->cari_barang($q);
+
+      echo json_encode($hasil);
+    }
+
+    public function tambah_transaksi()
+    {
+      $this->arahLogin();
+      $this->load->model('petugas_model');
+      $this->load->library('input');
+
+      $id_barang = $this->input->post('id');
+      $barang = $this->petugas_model->get_barang($id_barang);
+
+      $hasil['success'] = true;
+
+      if($barang!=false){
+        $hasil['item'] = $barang;
+      }else{
+        $hasil['success'] = false;
+      }
+
+      echo json_encode($hasil);
+
     }
 
   }

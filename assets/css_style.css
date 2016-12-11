@@ -71,11 +71,18 @@ a.hapus {
   margin-bottom: 10px;
   overflow: hidden;
 }
+.cd-table {
+    width: 100%;
+    border-spacing: 0px;
+}
 .cd-table tr > * {
-  padding: 7px 10px;
+  padding: 10px 10px;
 }
 .cd-table th {
   text-align: left;
+}
+.cd-table.table-hover tbody > tr:hover{
+  background: rgba(0,0,0,0.05);
 }
 .cd-container{
   max-width: 900px;
@@ -189,9 +196,6 @@ h3.subtitle {
     font-size: 18px;
     margin: 20px 0;
 }
-.cd-table {
-    width: 100%;
-}
 #list-petugas{
     overflow: hidden;
     text-align: center;
@@ -211,10 +215,10 @@ h3.subtitle {
 .petugas {
     width: 25%;
     text-align: center;
-    background: rgba(224, 234, 239, 0.71);
+    /*background: rgba(224, 234, 239, 0.71);*/
     border-radius: 5px;
     overflow: hidden;
-    box-shadow: 1px 1px 3px #bdbdbd;
+    /*box-shadow: 1px 1px 3px #bdbdbd;*/
     border: 1px solid #ccc;
     position: relative;
     display: inline-block;
@@ -343,4 +347,38 @@ h3.subtitle {
   background: #eee !important;
   border-bottom: 2px solid #ccc;
   cursor:default;
+}
+#menu-atas.menu-petugas li {
+    width: 33.333%;
+}
+.panel {
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.panel .panel-head {
+    background: #CFD8DC;
+    padding: 15px;
+    font-weight: bold;
+    color: #666;
+}
+.panel .panel-body {
+    padding: 15px;
+    border: 1px solid #cfd8dc;
+}
+#cari-barang input {
+    padding: 7px 10px;
+    width: 100%;
+    border: 1px solid #eee;
+    color: #888;
+    margin-bottom: 10px;
+}
+#cari-barang .panel-body #cari-barang-list{
+    height: 216px;
+    overflow: auto;
+}
+select.quantity {
+    width: 50px;
+    border: 1px solid #cacaca;
+    background: transparent;
 }

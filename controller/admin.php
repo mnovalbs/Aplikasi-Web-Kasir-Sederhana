@@ -285,6 +285,15 @@
       echo json_encode($arr);
     }
 
+    public function hapus_barang($id = 0)
+    {
+      $this->arahLogin();
+      $this->load->model('admin_model');
+      $id = (int)$id;
+
+      $this->admin_model->hapus_barang($id);
+    }
+
     public function edit_barang()
     {
       $this->arahLogin();

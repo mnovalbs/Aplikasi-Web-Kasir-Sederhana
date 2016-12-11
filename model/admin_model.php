@@ -112,4 +112,9 @@
       $this->db->query("UPDATE barang SET nama = $nama, deskripsi = $deskripsi, idkategori = $kategori, harga = $harga, stok = $stok, idpetugas = $petugas WHERE idbarang = $id");
     }
 
+    public function hapus_barang($id)
+    {
+      $this->db->query("DELETE FROM barang WHERE idbarang = $id");
+    }
+
   }

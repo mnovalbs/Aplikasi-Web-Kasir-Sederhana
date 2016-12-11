@@ -69,7 +69,7 @@ function base_url(str)
 //   get_list_kategori();
 // });
 
-$(".pilih-kategori").ready(function(){
+if($(".pilih-kategori").length){
   $.ajax({
     url : base_url('admin/list_kategori'),
     dataType : 'json',
@@ -80,7 +80,7 @@ $(".pilih-kategori").ready(function(){
       });
     }
   });
-});
+};
 
 function get_list_kategori()
 {
@@ -207,6 +207,17 @@ $("body").bind("DOMSubtreeModified", function() {
     closeModal();
   });
 
+  $(".quantity").change(function(){
+    var harga = $(this).parents('tr').attr('hargabarang');
+    var qty = $(this).val();
+
+    harga = parseInt(harga);
+    qty = parseInt(qty);
+
+    $(this).parents("tr").find('td:nth-child(4)').text( toRupiah(harga*qty) );
+
+  });
+
   function closeModal()
   {
     $(".modal").animate({
@@ -316,7 +327,7 @@ function tambah_barang()
 {
   var nama = $("#nama-barang").val();
   var deskripsi = $("#deskripsi-barang").val();
-  var kategori = $("#pilih-kategori").val();
+  var kategori = $("#tambah-barang .pilih-kategori").val();
   var harga = $("#harga-barang").val();
   var stok = $("#stok-barang").val();
   $("#tambah-barang button").html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> Loading&hellip;');
@@ -427,6 +438,18 @@ function ubah_barang(idbarang)
 
 }
 
+function hapus_barang(id)
+{
+  id = parseInt(id);
+  var conf = confirm("Yakin ingin menghapus barang ini?");
+
+  if(conf){
+    $.get(base_url('admin/hapus_barang/'+id), function(data){
+      get_list_barang();
+    });
+  }
+}
+
 function do_edit_barang()
 {
   var nama = $("#edit-barang .nama-barang").val();
@@ -450,6 +473,80 @@ function do_edit_barang()
         $.each(data.error, function(index, element){
           add_alert("<div class='peringatan merah'>"+element+"</div>");
         });
+      }
+    }
+  });
+}
+
+$("#cari-barang input").change(function(){
+
+  var q = $(this).val();
+
+  $.ajax({
+    url : base_url('petugas/cari_barang'),
+    data : {q:q},
+    type : 'POST',
+    dataType : 'json',
+    success : function(data){
+      $("#cari-barang tbody").html('');
+
+      var no = 1;
+      $.each(data, function(index, element){
+        var tr = '<tr>';
+        tr += '<td>'+no+'</td>';
+        tr += '<td>'+element.nama_barang+'</td>';
+        tr += '<td>'+element.nama_kategori+'</td>';
+        tr += '<td>'+toRupiah(parseInt(element.harga))+'</td>';
+        tr += '<td>'+element.stok+'</td>';
+        tr += '<td><label onclick="tambah_transaksi('+element.idbarang+')"><i class="fa fa-plus"></i></label></td>';
+        tr += '</tr>';
+        no++;
+        $("#cari-barang tbody").append(tr);
+      });
+
+    }
+  });
+
+});
+
+function tambah_transaksi(num)
+{
+  var banyak_tr = $("#keranjang tbody tr").length;
+  $.ajax({
+    url : base_url('petugas/tambah_transaksi'),
+    type : 'POST',
+    dataType : 'json',
+    data : {id:num},
+    success : function(data){
+      reset_alert();
+      if(data.success){
+        var lanjut = true;
+        $("#keranjang tbody tr").each(function(){
+          if($(this).attr('idbarang')==data.item.idbarang){
+            lanjut = false;
+            add_alert("<div class='peringatan merah'>Barang sudah ada di keranjang</div>");
+          }
+        });
+
+        if(lanjut){
+          var tr = '<tr idbarang="'+data.item.idbarang+'" hargabarang="'+data.item.harga+'">';
+          tr += '<td>'+data.item.nama_barang+'</td>';
+          tr += '<td>'+toRupiah(parseInt(data.item.harga))+'</td>';
+
+          var tr_select = '<select class="quantity">';
+          for(i=1;i<=data.item.stok;i++){
+            tr_select += "<option value='"+i+"'>"+i+"</option>";
+          }
+          tr_select += '</select>';
+
+          tr += '<td>'+tr_select+'</td>';
+
+          tr += '<td>'+toRupiah(parseInt(data.item.harga))+'</td>';
+
+          tr += '</tr>';
+
+          $("#keranjang tbody").append(tr);
+        }
       }
     }
   });
