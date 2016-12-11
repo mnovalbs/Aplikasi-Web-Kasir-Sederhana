@@ -2,6 +2,9 @@
   Codedicate Copyright Javascript
 */
 
+var start_barang = 0;
+var limit_barang = 10;
+
 function inputKeyPress(e)
 {
   if(e.keyCode==13)
@@ -66,14 +69,14 @@ function base_url(str)
 //   get_list_kategori();
 // });
 
-$("#pilih-kategori").ready(function(){
+$(".pilih-kategori").ready(function(){
   $.ajax({
     url : base_url('admin/list_kategori'),
     dataType : 'json',
     success : function(data){
       var del = 500;
       $.each(data, function(index, element){
-        $("#pilih-kategori").append("<option value='"+element.idkategori+"'>"+element.nama+"</option>");
+        $(".pilih-kategori").append("<option value='"+element.idkategori+"'>"+element.nama+"</option>");
       });
     }
   });
@@ -345,6 +348,8 @@ function tambah_barang()
 
 function get_list_barang(start = 0, limit = 10)
 {
+  start_barang = start;
+  limit_barang = 10;
   $("#list-barang tbody").html('');
 
   $.get(base_url('admin/list_barang/'+start+'/'+limit), function(data){
@@ -358,7 +363,7 @@ function get_list_barang(start = 0, limit = 10)
         tr += '<td>'+element.nama_kategori+'</td>';
         tr += '<td>'+toRupiah(parseInt(element.harga))+'</td>';
         tr += '<td>'+element.stok+'</td>';
-        tr += '<td>Action</td>';
+        tr += '<td><label class="hapus" onclick="hapus_barang('+element.idbarang+')"><i class="fa fa-trash"></i></label> <label class="ubah" onclick="ubah_barang('+element.idbarang+')"><i class="fa fa-pencil"></i></label></td>';
         tr += '</tr>';
         $("#list-barang tbody").append(tr);
         no++;
@@ -398,4 +403,54 @@ function get_list_barang(start = 0, limit = 10)
 function toRupiah(isi)
 {
   return 'Rp '+isi.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+}
+
+function ubah_barang(idbarang)
+{
+  idbarang = parseInt(idbarang);
+  openModal('edit-barang');
+
+  $.get(base_url('admin/get_barang/'+idbarang), function(data){
+    $("#edit-barang .nama-barang").val(data.nama_barang);
+    $("#edit-barang .deskripsi-barang").val(data.deskripsi);
+    $("#edit-barang .harga-barang").val(data.harga);
+    $("#edit-barang .stok-barang").val(data.stok);
+    $("#edit-barang .id-barang").val(data.idbarang);
+    var kategori = data.idkategori;
+
+    $("#edit-barang .pilih-kategori option").each(function(){
+      if( $(this).attr('value') == kategori ){
+        $(this).attr('selected', 'selected');
+      }
+    });
+  },'json');
+
+}
+
+function do_edit_barang()
+{
+  var nama = $("#edit-barang .nama-barang").val();
+  var deskripsi = $("#edit-barang .deskripsi-barang").val();
+  var kategori = $("#edit-barang .pilih-kategori").val();
+  var harga = $("#edit-barang .harga-barang").val();
+  var stok = $("#edit-barang .stok-barang").val();
+  var id = $("#edit-barang .id-barang").val();
+
+  $.ajax({
+    url : base_url('admin/edit_barang'),
+    type : 'POST',
+    data : {nama:nama, deskripsi:deskripsi, kategori:kategori, harga:harga, stok:stok, id:id},
+    dataType : 'json',
+    success : function(data){
+      reset_alert();
+      if(data.success){
+        add_alert("<div class='peringatan hijau'>Barang berhasil diubah</div>");
+        get_list_barang(start_barang, limit_barang);
+      }else{
+        $.each(data.error, function(index, element){
+          add_alert("<div class='peringatan merah'>"+element+"</div>");
+        });
+      }
+    }
+  });
 }

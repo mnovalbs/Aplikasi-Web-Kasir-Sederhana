@@ -25,7 +25,7 @@
         <td><?php echo safe_echo_html($barang['nama_kategori']); ?></td>
         <td><?php echo toRupiah($barang['harga']); ?></td>
         <td><?php echo safe_echo_html($barang['stok']); ?></td>
-        <td>Action</td>
+        <td><label onclick='hapus_barang(<?php echo $barang['idbarang']; ?>)' class='hapus'><i class='fa fa-trash'></i></label> <label onclick='ubah_barang(<?php echo $barang['idbarang']; ?>)' class='ubah'><i class='fa fa-pencil'></i></label></td>
       </tr>
       <?php
       $no++;
@@ -58,7 +58,7 @@
       <div class='input'>
         <div class='dibagi-tiga'>
           <div>
-            <select id='pilih-kategori'>
+            <select class='pilih-kategori'>
               <option value=''>Pilih Kategori</option>
             </select>
           </div>
@@ -72,6 +72,37 @@
       </div>
       <div class='input'>
         <button type='button' onclick='tambah_barang()'>Tambah</button>
+      </div>
+    </form>
+  </div>
+
+  <div class='modal' id='edit-barang'>
+    <div class='head'>Edit Data Barang</div>
+    <form class='cd-form'>
+      <div class='input'>
+        <input type='hidden' class='id-barang' value=''/>
+        <input class='nama-barang' placeholder='Nama barang&hellip;' maxlength='50'/>
+      </div>
+      <div class='input'>
+        <textarea class='deskripsi-barang' placeholder='Deskripsi barang&hellip;' maxlength='300'></textarea>
+      </div>
+      <div class='input'>
+        <div class='dibagi-tiga'>
+          <div>
+            <select class='pilih-kategori'>
+              <option value=''>Pilih Kategori</option>
+            </select>
+          </div>
+          <div>
+            <input class='harga-barang' placeholder='Harga barang' min='1' type='number'/>
+          </div>
+          <div>
+            <input class='stok-barang' placeholder='Stok barang' min='1' type='number'/>
+          </div>
+        </div>
+      </div>
+      <div class='input'>
+        <button type='button' onclick='do_edit_barang()'>Submit</button>
       </div>
     </form>
   </div>

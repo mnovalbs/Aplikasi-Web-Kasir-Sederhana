@@ -77,7 +77,7 @@
     public function get_barang($id)
     {
       $id = (int)$id;
-      $query = $this->db->query("SELECT *,a.nama AS nama_barang, b.nama AS nama_kategori, c.nama AS nama_petugas FROM barang AS a INNER JOIN kategori AS b ON a.idkategori = b.idkategori INNER JOIN petugas AS c ON a.idpetugas = c.idpetugas WHERE id = $id");
+      $query = $this->db->query("SELECT *,a.nama AS nama_barang, b.nama AS nama_kategori, c.nama AS nama_petugas FROM barang AS a INNER JOIN kategori AS b ON a.idkategori = b.idkategori INNER JOIN petugas AS c ON a.idpetugas = c.idpetugas WHERE idbarang = $id");
       return $query->fetch_assoc();
     }
 
@@ -97,6 +97,19 @@
       $petugas = (int)$petugas;
 
       $this->db->query("INSERT INTO barang (nama, deskripsi, idkategori, harga, stok, idpetugas) VALUES ($nama, $deskripsi, $kategori, $harga, $stok, $petugas) ");
+    }
+
+    public function edit_barang($id ,$nama, $deskripsi, $kategori, $harga, $stok, $petugas)
+    {
+      $id = (int)$id;
+      $nama = $this->db->escape($nama);
+      $deskripsi = $this->db->escape($deskripsi);
+      $kategori = (int)$kategori;
+      $harga = (int)$harga;
+      $stok = (int)$stok;
+      $petugas = (int)$petugas;
+
+      $this->db->query("UPDATE barang SET nama = $nama, deskripsi = $deskripsi, idkategori = $kategori, harga = $harga, stok = $stok, idpetugas = $petugas WHERE idbarang = $id");
     }
 
   }

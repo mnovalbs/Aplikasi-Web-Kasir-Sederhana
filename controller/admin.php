@@ -285,6 +285,82 @@
       echo json_encode($arr);
     }
 
+    public function edit_barang()
+    {
+      $this->arahLogin();
+      $this->load->model('admin_model');
+      $this->load->library('input');
+
+      $nama_barang = $this->input->post('nama');
+      $deskripsi_barang = $this->input->post('deskripsi');
+      $kategori_barang = $this->input->post('kategori');
+      $harga_barang = $this->input->post('harga');
+      $stok_barang = $this->input->post('stok');
+      $id_barang = $this->input->post('id');
+
+      $arr['success'] = true;
+      $arr['error'] = array();
+
+      $id_barang = (int)$id_barang;
+
+      if(empty($nama_barang)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Nama barang harus terisi");
+      }
+
+      if(!preg_match('/^[a-zA-Z0-9- ]+$/',$nama_barang)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Nama barang tidak valid, hanya boleh alphanumeric dan strip");
+      }
+
+      if(strlen($nama_barang)>50){
+        $arr['success'] = false;
+        array_push($arr['error'], "Nama barang terlalu panjang, maksimal 50 karakter");
+      }
+
+      if(empty($deskripsi_barang)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Deskripsi barang harus terisi");
+      }
+
+      if(!is_numeric($kategori_barang)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Kategori barang tidak valid");
+      }
+
+      if(!$this->admin_model->is_kategori_exists('',$kategori_barang)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Kategori tersebut tidak ditemukan");
+      }
+
+      if(!is_numeric($harga_barang)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Harga barang tidak valid");
+      }
+
+      if($harga_barang<1){
+        $arr['success'] = false;
+        array_push($arr['error'], "Harga barang harus terisi");
+      }
+
+      if(!is_numeric($stok_barang)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Stok barang tidak valid");
+      }
+
+      if($stok_barang<1){
+        $arr['success'] = false;
+        array_push($arr['error'], "Stok barang harus terisi");
+      }
+
+      if($arr['success']){
+        $petugas = $this->admin_model->get_petugas(get_cookie('petugas'));
+        $this->admin_model->edit_barang($id_barang ,$nama_barang, $deskripsi_barang, $kategori_barang, $harga_barang, $stok_barang, $petugas['idpetugas']);
+      }
+
+      echo json_encode($arr);
+    }
+
   }
 
 ?>
