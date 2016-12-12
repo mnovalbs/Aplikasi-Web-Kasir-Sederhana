@@ -37,7 +37,7 @@
           <?php echo date("Y-m-d H:i:s"); ?>
         </div>
         <div class='kanan'>
-
+          <?php echo safe_echo_html("#CDINV".$detail_transaksi[0]['idpelanggan']." ".$detail_transaksi[0]['nama_petugas']); ?>
         </div>
       </div>
       <table class='cd-table'>
@@ -66,7 +66,7 @@
     </div>
 
     <script>
-      // window.print();
+      window.print();
     </script>
   </body>
 </html>

@@ -181,8 +181,8 @@
         foreach ($keranjang as $barang) {
           $this->petugas_model->add_detail_transaksi($current_invoice, $barang->id, $barang->qty, $barang->harga);
         }
+        echo $current_invoice;
       }
-      // echo $keranjang[0]->id;
     }
 
     public function print_transaksi($id = 0)

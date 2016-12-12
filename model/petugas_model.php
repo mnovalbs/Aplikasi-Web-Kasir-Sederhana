@@ -60,14 +60,14 @@
 
     public function list_barang($start = 0, $limit = 5)
     {
-      $this->db->query("SELECT *,a.nama AS nama_barang, b.nama AS nama_kategori FROM barang AS a INNER JOIN kategori AS b ON a.idkategori = b.idkategori ORDER BY idbarang DESC LIMIT $start, $limit");
+      $this->db->query("SELECT *,a.nama AS nama_barang, b.nama AS nama_kategori FROM barang AS a INNER JOIN kategori AS b ON a.idkategori = b.idkategori WHERE a.stok > 0 ORDER BY idbarang DESC LIMIT $start, $limit");
       return $this->db->get_all();
     }
 
     public function cari_barang($q = '')
     {
       // $q = $this->db->escape($q);
-      $this->db->query("SELECT *,a.nama AS nama_barang, b.nama AS nama_kategori FROM barang AS a INNER JOIN kategori AS b ON a.idkategori = b.idkategori WHERE a.nama LIKE '%$q%' ORDER BY a.nama ASC");
+      $this->db->query("SELECT *,a.nama AS nama_barang, b.nama AS nama_kategori FROM barang AS a INNER JOIN kategori AS b ON a.idkategori = b.idkategori WHERE a.nama LIKE '%$q%' AND a.stok > 0 ORDER BY a.nama ASC");
       return $this->db->get_all();
     }
 
@@ -97,6 +97,7 @@
 
     public function add_detail_transaksi($idpelanggan, $idbarang, $jumlah, $harga)
     {
+      $this->db->query("UPDATE barang AS a, (SELECT b.stok-$jumlah AS stok_baru FROM barang AS b WHERE b.idbarang = $idbarang)AS c SET a.stok = c.stok_baru WHERE a.idbarang = $idbarang");
       $this->db->query("INSERT INTO detail_transaksi (idtransaksi, idbarang, jumlah, harga) VALUES ((SELECT idtransaksi FROM transaksi WHERE idpelanggan = $idpelanggan),$idbarang, $jumlah, $harga)");
     }
 

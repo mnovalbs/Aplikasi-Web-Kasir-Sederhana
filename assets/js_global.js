@@ -590,7 +590,8 @@ function keranjang_proses()
     });
 
     $.post(base_url('petugas/keranjang_proses'), {keranjang:JSON.stringify(keranjang)}, function(data){
-      console.log(data);
+      window.location.reload();
+      window.open(base_url('petugas/print_transaksi/'+data));
     });
 
   }else{
