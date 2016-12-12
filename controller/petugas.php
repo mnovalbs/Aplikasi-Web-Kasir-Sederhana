@@ -155,6 +155,45 @@
 
     }
 
+    public function logout()
+    {
+      delete_cookie('petugas');
+      die(redirect('admin'));
+    }
+
+    public function keranjang_proses()
+    {
+      $this->arahLogin();
+      $this->load->model('petugas_model');
+      if(!empty($_POST['keranjang'])){
+        $keranjang = json_decode($_POST['keranjang']);
+        $petugas = $this->petugas_model->get_petugas(get_cookie('petugas'));
+        $current_invoice = $this->petugas_model->get_current_invoice();
+        $tgl_transaksi = date("Y-m-d H:i:s");
+        $total_item = count($keranjang);
+        $total_harga = 0;
+        foreach ($keranjang as $barang) {
+          $total_harga += $barang->harga * $barang->qty;
+        }
+
+        $this->petugas_model->add_transaksi($current_invoice,$tgl_transaksi,$total_item,$total_harga,$petugas['idpetugas']);
+
+        foreach ($keranjang as $barang) {
+          $this->petugas_model->add_detail_transaksi($current_invoice, $barang->id, $barang->qty, $barang->harga);
+        }
+      }
+      // echo $keranjang[0]->id;
+    }
+
+    public function print_transaksi($id = 0)
+    {
+      $this->arahLogin();
+      $this->load->model('petugas_model');
+      $data['detail_transaksi'] = $this->petugas_model->get_detail_transaksi($id);
+
+      $this->load->view('petugas/petugas_print_transaksi',$data);
+    }
+
   }
 
 ?>

@@ -63,4 +63,9 @@
       </tbodY>
     </table>
   </div>
+  <div class='panel-footer'>
+    <?php echo toRupiah(0); ?>
+  </div>
 </div>
+
+<button type='button' onclick='keranjang_proses()'>Proses</button>

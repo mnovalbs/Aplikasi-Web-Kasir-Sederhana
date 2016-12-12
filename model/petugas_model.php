@@ -82,6 +82,30 @@
       }
     }
 
+    public function get_petugas($kunci_login = '')
+    {
+      $kunci_login = $this->db->escape($kunci_login);
+      $query = $this->db->query("SELECT nama, email, kategori, idpetugas FROM petugas WHERE kunci_login = $kunci_login");
+      return $query->fetch_assoc();
+    }
+
+    public function add_transaksi($current_invoice,$tgl_transaksi,$total_item,$total_harga,$petugas)
+    {
+      $tgl_transaksi = $this->db->escape($tgl_transaksi);
+      $this->db->query("INSERT INTO transaksi (idpelanggan, tgl_transaksi, total_item, total_harga, id_petugas) VALUES($current_invoice, $tgl_transaksi, $total_item, $total_harga, $petugas)");
+    }
+
+    public function add_detail_transaksi($idpelanggan, $idbarang, $jumlah, $harga)
+    {
+      $this->db->query("INSERT INTO detail_transaksi (idtransaksi, idbarang, jumlah, harga) VALUES ((SELECT idtransaksi FROM transaksi WHERE idpelanggan = $idpelanggan),$idbarang, $jumlah, $harga)");
+    }
+
+    public function get_detail_transaksi($id)
+    {
+      $this->db->query("SELECT *, d.nama AS nama_barang, b.nama AS nama_petugas, c.harga AS harga_jual FROM transaksi AS a INNER JOIN petugas AS b ON a.id_petugas = b.idpetugas INNER JOIN detail_transaksi AS c ON c.idtransaksi = a.idtransaksi INNER JOIN barang AS d ON d.idbarang = c.idbarang WHERE a.idtransaksi = $id");
+      return $this->db->get_all();
+    }
+
   }
 
 ?>

@@ -355,6 +355,7 @@ h3.subtitle {
     border-radius: 3px;
     overflow: hidden;
     margin-bottom: 20px;
+    border: 1px solid #cfd8dc;
 }
 .panel .panel-head {
     background: #CFD8DC;
@@ -364,7 +365,12 @@ h3.subtitle {
 }
 .panel .panel-body {
     padding: 15px;
-    border: 1px solid #cfd8dc;
+}
+.panel-footer {
+    text-align: right;
+    padding: 10px 25px;
+    background: #eee;
+    border-top: 1px solid #ccc;
 }
 #cari-barang input {
     padding: 7px 10px;
@@ -381,4 +387,41 @@ select.quantity {
     width: 50px;
     border: 1px solid #cacaca;
     background: transparent;
+}
+#keranjang tr > *:nth-child(4){
+    text-align: right;
+}
+
+#cetakan-transaksi {
+  /*white-space: pre-wrap;*/
+  line-height: 1.4;
+}
+.tengah{
+  text-align: center;
+}
+#cetakan-transaksi {
+    max-width: 450px;
+    margin: 0 auto;
+    border: 1px dotted #ccc;
+    padding: 20px;
+}
+.kiri{
+  float: left;
+}
+.kanan{
+  float: right;
+}
+.tanggal-petugas{
+  overflow: hidden;
+}
+.tanggal-petugas {
+    overflow: hidden;
+    border-top: 1px dotted;
+    border-bottom: 1px dotted;
+    padding: 3px 0;
+    margin: 5px 0;
+    border-color: #ccc;
+}
+#cetakan-transaksi td:nth-child(4), .harga-jual, #cetakan-transaksi td:nth-child(3){
+    text-align: right;
 }

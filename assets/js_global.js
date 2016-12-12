@@ -216,6 +216,8 @@ $("body").bind("DOMSubtreeModified", function() {
 
     $(this).parents("tr").find('td:nth-child(4)').text( toRupiah(harga*qty) );
 
+    keranjang_hitung_total();
+
   });
 
   function closeModal()
@@ -268,8 +270,28 @@ $("body").bind("DOMSubtreeModified", function() {
     $(this).parents('.li-kategori').html(input_baru);
   });
 
+
 });
 
+$("#keranjang tbody").bind("DOMSubtreeModified", function() {
+  keranjang_hitung_total();
+});
+
+function keranjang_hitung_total()
+{
+  var total = 0;
+  $("#keranjang tbody > tr").each(function(){
+    var harga_barang = $(this).attr('hargabarang');
+    var qty = $(this).find('select').val();
+
+    harga_barang = parseInt(harga_barang);
+    qty = parseInt(qty);
+
+    total += (harga_barang*qty);
+  });
+
+  $("#keranjang .panel-footer").html( toRupiah(total) );
+}
 
 $("#add-kategori label").click(function(){
   reset_alert();
@@ -550,4 +572,29 @@ function tambah_transaksi(num)
       }
     }
   });
+}
+
+function keranjang_proses()
+{
+
+  if( $("#keranjang tbody > tr").length > 0 ){
+
+    var keranjang = [];
+    $("#keranjang tbody > tr").each(function(){
+      var idbarang = parseInt($(this).attr('idbarang'));
+      var hargabarang = parseInt($(this).attr('hargabarang'));
+      var qty = parseInt($(this).find('select').val());
+
+      var barang = {id:idbarang, harga:hargabarang, qty:qty};
+      keranjang.push(barang);
+    });
+
+    $.post(base_url('petugas/keranjang_proses'), {keranjang:JSON.stringify(keranjang)}, function(data){
+      console.log(data);
+    });
+
+  }else{
+    add_alert("<div class='peringatan merah'>Belum ada barang di keranjang</div>");
+  }
+
 }
