@@ -107,6 +107,14 @@
       return $this->db->get_all();
     }
 
+    public function cari_rekap($from, $to, $petugas)
+    {
+      $from = $this->db->escape($from);
+      $to = $this->db->escape($to);
+      $this->db->query("SELECT * FROM transaksi WHERE tgl_transaksi >= $from AND tgl_transaksi <= $to AND id_petugas = $petugas");
+      return $this->db->get_all();
+    }
+
   }
 
 ?>

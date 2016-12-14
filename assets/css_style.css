@@ -120,16 +120,17 @@ a.hapus {
 .cd-container {
     background: #fff;
     padding: 20px;
-    margin-top: 20px;
+    margin-top: 82px;
+    margin-bottom: 20px;
     border-radius: 3px;
 }
 #menu-atas li a {
     display: block;
     /* background: #ECEFF1; */
-    margin: 5px;
+    /*margin: 5px;*/
     color: #78909C;
     font-weight: bold;
-    /* padding: 12px; */
+     padding: 17px 20px;
     /* border-radius: 3px; */
     position: relative;
 }
@@ -156,16 +157,25 @@ a.hapus {
     color: #f4511e;
 }
 #menu-atas li {
-    display: block;
-    float: left;
-    width: 20%;
-    text-align: center;
+  /*display: block;
+  float: left;
+  width: 20%;
+  text-align: center;*/
+  display: inline-block;
 }
 #menu-atas {
     padding: 0px;
     margin: 0px;
     list-style: none;
     overflow: hidden;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    background: #fff;
+    text-align: center;
+    box-shadow: 0 0 3px #ccc;
+    z-index: 9;
 }
 #kategori-list {
     overflow: hidden;
@@ -273,7 +283,7 @@ h3.subtitle {
     right: 10px;
     width: 100%;
     max-width: 400px;
-    z-index: 10;
+    z-index: 12;
 }
 .li-kategori table{
   width: 100%;
@@ -288,6 +298,7 @@ h3.subtitle {
     left: 0px;
     width: 100%;
     height: 100%;
+    z-index: 10;
     background: rgba(0, 0, 0, 0.22);
 }
 .modal{
@@ -298,7 +309,7 @@ h3.subtitle {
     right: 0px;
     margin: 0 auto;
     max-width: 700px;
-    z-index: 9;
+    z-index: 11;
     background: #fff;
     border-radius: 3px;
     padding: 20px;
@@ -349,7 +360,7 @@ h3.subtitle {
   cursor:default;
 }
 #menu-atas.menu-petugas li {
-    width: 33.333%;
+    /*width: 33.333%;*/
 }
 .panel {
     border-radius: 3px;
@@ -424,4 +435,18 @@ select.quantity {
 }
 #cetakan-transaksi td:nth-child(4), .harga-jual, #cetakan-transaksi td:nth-child(3){
     text-align: right;
+}
+#from-kasir {
+    border: 1px solid #ccc;
+    background: transparent;
+    padding: 7px;
+}
+#from-date, #to-date {
+    border: 1px solid #ccc;
+    background: transparent;
+    padding: 5px 10px;
+}
+.kotak-cari{
+    text-align: center;
+    margin: 10px 0;
 }

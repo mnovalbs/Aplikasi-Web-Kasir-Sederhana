@@ -341,7 +341,7 @@ function openModal(str)
   $("#"+str).after("<div class='bg-hitam'></div>");
   $("#"+str).show();
   $("#"+str).animate({
-    top: 30,
+    top: 80,
   },300);
 }
 
@@ -503,7 +503,7 @@ function do_edit_barang()
 $("#cari-barang input").change(function(){
 
   var q = $(this).val();
-
+  add_alert("<div class='peringatan hijau'><i class=\"fa fa-circle-o-notch fa-spin fa-fw\"></i> Loading&hellip;</div>");
   $.ajax({
     url : base_url('petugas/cari_barang'),
     data : {q:q},
@@ -525,6 +525,7 @@ $("#cari-barang input").change(function(){
         no++;
         $("#cari-barang tbody").append(tr);
       });
+      reset_alert();
 
     }
   });
@@ -534,6 +535,7 @@ $("#cari-barang input").change(function(){
 function tambah_transaksi(num)
 {
   var banyak_tr = $("#keranjang tbody tr").length;
+  add_alert("<div class='peringatan hijau'><i class=\"fa fa-circle-o-notch fa-spin fa-fw\"></i> Loading&hellip;</div>");
   $.ajax({
     url : base_url('petugas/tambah_transaksi'),
     type : 'POST',
@@ -572,6 +574,7 @@ function tambah_transaksi(num)
       }
     }
   });
+  reset_alert();
 }
 
 function keranjang_proses()
@@ -598,4 +601,190 @@ function keranjang_proses()
     add_alert("<div class='peringatan merah'>Belum ada barang di keranjang</div>");
   }
 
+}
+
+function petugas_cari_rekap()
+{
+  var from_date = $("#from-date").val();
+  var to_date = $("#to-date").val();
+  add_alert("<div class='peringatan hijau'><i class=\"fa fa-circle-o-notch fa-spin fa-fw\"></i> Loading&hellip;</div>");
+  $.ajax({
+    url : base_url('petugas/cari_rekap'),
+    type : 'POST',
+    data : {from:from_date, to:to_date},
+    dataType : 'json',
+    success : function(data){
+      reset_alert();
+      $("#rekap tbody").html("");
+      var no = 1;
+      $.each(data, function(index,element){
+        var tr = '<tr>';
+        tr += '<td>'+no+'</td>';
+        tr += '<td>'+element.tgl_transaksi+'</td>';
+        tr += '<td>CDNIV'+element.idpelanggan+'</td>';
+        tr += '<td>'+element.total_item+'</td>';
+        tr += '<td>'+toRupiah(parseInt(element.total_harga))+'</td>';
+        tr += '<td><a href="#!" onclick="detail_transaksi('+element.idpelanggan+')"><i class="fa fa-search"></i></a> <a href="'+base_url('petugas/print_transaksi/'+element.idpelanggan)+'" target="_blank"><i class="fa fa-print"></i></a></td>';
+        tr += '</tr>';
+        no++;
+        $("#rekap tbody").append(tr);
+      });
+    }
+  });
+}
+
+function admin_cari_rekap()
+{
+  var from_date = $("#from-date").val();
+  var to_date = $("#to-date").val();
+  var kasir = $("#from-kasir").val();
+  add_alert("<div class='peringatan hijau'><i class=\"fa fa-circle-o-notch fa-spin fa-fw\"></i> Loading&hellip;</div>");
+  $.ajax({
+    url : base_url('admin/cari_rekap'),
+    type : 'POST',
+    data : {from:from_date, to:to_date, kasir:kasir},
+    dataType : 'json',
+    success : function(data){
+      reset_alert();
+      $("#rekap tbody").html("");
+      var no = 1;
+      $.each(data, function(index,element){
+        var tr = '<tr>';
+        tr += '<td>'+no+'</td>';
+        tr += '<td>'+element.tgl_transaksi+'</td>';
+        tr += '<td>'+element.nama+'</td>';
+        tr += '<td>CDNIV'+element.idpelanggan+'</td>';
+        tr += '<td>'+element.total_item+'</td>';
+        tr += '<td>'+toRupiah(parseInt(element.total_harga))+'</td>';
+        tr += '<td><a href="#!" onclick="admin_detail_transaksi('+element.idpelanggan+')"><i class="fa fa-search"></i></a> <a href="'+base_url('admin/print_transaksi/'+element.idpelanggan)+'" target="_blank"><i class="fa fa-print"></i></a></td>';
+        tr += '</tr>';
+        no++;
+        $("#rekap tbody").append(tr);
+      });
+    }
+  });
+}
+
+function detail_transaksi(num)
+{
+  add_alert("<div class='peringatan hijau'><i class=\"fa fa-circle-o-notch fa-spin fa-fw\"></i> Loading&hellip;</div>");
+  $.ajax({
+    url : base_url('petugas/detail_transaksi/'+num),
+    success : function(data){
+      reset_alert();
+      $("#detail-transaksi").html(data);
+      openModal('detail-transaksi');
+    }
+  });
+}
+
+function admin_detail_transaksi(num)
+{
+  add_alert("<div class='peringatan hijau'><i class=\"fa fa-circle-o-notch fa-spin fa-fw\"></i> Loading&hellip;</div>");
+  $.ajax({
+    url : base_url('admin/detail_transaksi/'+num),
+    success : function(data){
+      reset_alert();
+      $("#detail-transaksi").html(data);
+      openModal('detail-transaksi');
+    }
+  });
+}
+
+function tambah_user()
+{
+  var nama = $("#nama-user").val();
+  var email = $("#email-user").val();
+  var password = $("#password-user").val();
+  var password_confirm = $("#confirm-password").val();
+  var kategori = $("#kategori-user").val();
+
+  reset_alert();
+  $.ajax({
+    url : base_url('admin/add_user'),
+    type : 'POST',
+    data : {nama:nama, email:email, password:password, confirm_password:password_confirm, kategori:kategori},
+    dataType : 'json',
+    success : function(data){
+      if(data.success){
+        add_alert("<div class='peringatan hijau'>Berhasil menambahkan petugas</div>");
+        $("input").val("");
+        reset_alert();
+        setTimeout(function(){
+          window.location.reload();
+        });
+      }else{
+        $.each(data.error,function(index,element){
+          add_alert("<div class='peringatan merah'>"+element+"</div>");
+        });
+      }
+    }
+  });
+}
+
+function edit_user(num)
+{
+    add_alert("<div class='peringatan hijau'><i class=\"fa fa-circle-o-notch fa-spin fa-fw\"></i> Loading&hellip;</div>");
+  $.ajax({
+    url : base_url('admin/ambil_petugas'),
+    type : 'POST',
+    dataType : 'json',
+    data : {id:num},
+    success : function(data){
+      openModal('edit_user');
+
+      var edit_user_modal = $("#edit_user");
+      edit_user_modal.find('.nama-user').val(data.nama);
+      edit_user_modal.find('.email-user').val(data.email);
+      edit_user_modal.find('.id-user').val(data.idpetugas);
+
+      edit_user_modal.find('.kategori-user option').each(function(){
+        if($(this).val() == data.kategori){
+          $(this).attr('selected','selected');
+        }
+      });
+
+      reset_alert();
+    }
+  });
+}
+
+function do_edit_user()
+{
+  add_alert("<div class='peringatan hijau'><i class=\"fa fa-circle-o-notch fa-spin fa-fw\"></i> Loading&hellip;</div>");
+  var edit_user_modal = $("#edit_user");
+  var nama = edit_user_modal.find('.nama-user').val();
+  var kategori = edit_user_modal.find('.kategori-user').val();
+  var id = edit_user_modal.find('.id-user').val();
+
+  var password = edit_user_modal.find('.password-user').val();
+  var password_confirm = edit_user_modal.find('.confirm-password').val();
+
+  $.ajax({
+    url : base_url('admin/do_edit_user'),
+    type : 'POST',
+    dataType : 'json',
+    data : {id:id, nama:nama, kategori:kategori, password:password,password_confirm:password_confirm},
+    success : function(data){
+      reset_alert();
+      if(data.success){
+        window.location.reload();
+      }else{
+        $.each(data.error, function(index, element){
+          add_alert("<div class='peringatan merah'>"+element+"</div>");
+        });
+      }
+    }
+  });
+}
+
+function strip_tags (input, allowed) {
+  allowed = (((allowed || '') + '').toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('')
+
+  var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi
+  var commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi
+
+  return input.replace(commentsAndPhpTags, '').replace(tags, function ($0, $1) {
+    return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : ''
+  })
 }

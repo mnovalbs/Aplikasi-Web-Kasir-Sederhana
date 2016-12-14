@@ -28,6 +28,17 @@
       }
     }
 
+    public function is_petugas_exists($email)
+    {
+      $email = $this->db->escape($email);
+      $query = $this->db->query("SELECT * FROM petugas WHERE email = $email");
+      if($query->num_rows!=0){
+        return true;
+      }else{
+        return false;
+      }
+    }
+
     public function is_kategori_exists($nama='', $id=0)
     {
       if(!empty($nama))
@@ -68,9 +79,20 @@
       return $query->fetch_assoc();
     }
 
-    public function list_petugas()
+    public function ambil_petugas($ambil = '')
     {
-      $this->db->query("SELECT email, idpetugas, nama, kategori FROM petugas ORDER BY kategori DESC");
+      $id = (int)$ambil;
+      $query = $this->db->query("SELECT nama, email, kategori, idpetugas FROM petugas WHERE idpetugas = $id");
+      return $query->fetch_assoc();
+    }
+
+    public function list_petugas($kategori = 0)
+    {
+      if(empty($kategori)){
+        $this->db->query("SELECT email, idpetugas, nama, kategori FROM petugas ORDER BY kategori DESC");
+      }else{
+        $this->db->query("SELECT email, idpetugas, nama, kategori FROM petugas WHERE kategori = $kategori ORDER BY kategori DESC");
+      }
       return $this->db->get_all();
     }
 
@@ -115,6 +137,51 @@
     public function hapus_barang($id)
     {
       $this->db->query("DELETE FROM barang WHERE idbarang = $id");
+    }
+
+    public function add_user($nama, $email, $password, $password_salt, $kategori, $kunci_login)
+    {
+      $nama = $this->db->escape($nama);
+      $email = $this->db->escape($email);
+      $password = $this->db->escape($password);
+      $password_salt = $this->db->escape($password_salt);
+      $kunci_login = $this->db->escape($kunci_login);
+      $this->db->query("INSERT INTO petugas (nama, email, password, password_salt, kunci_login, kategori) VALUES($nama, $email, $password, $password_salt, $kunci_login, $kategori)");
+    }
+
+    public function do_edit_user($id, $nama, $kategori, $password)
+    {
+      $nama = $this->db->escape($nama);
+      if(!empty($password)){
+        $password_salt = sha1(date("Y-m-d H:i:s").rand(1,100).rand(1,100).rand(1,100));
+        $password = sha1($password_salt.$password);
+        $kunci_login = sha1(date("Y-d-d-H-m:i:s").rand(1,100).$password);
+
+        $password = $this->db->escape($password);
+        $password_salt = $this->db->escape($password_salt);
+        $kunci_login = $this->db->escape($kunci_login);
+        $this->db->query("UPDATE petugas SET nama = $nama, password = $password, password_salt = $password_salt, kategori = $kategori, kunci_login = $kunci_login WHERE idpetugas = $id");
+      }else{
+        $this->db->query("UPDATE petugas SET nama = $nama, kategori = $kategori WHERE idpetugas = $id");
+      }
+    }
+
+    public function cari_rekap($from, $to, $kasir = '')
+    {
+      $from = $this->db->escape($from);
+      $to = $this->db->escape($to);
+      if(!empty($kasir)){
+        $this->db->query("SELECT a.*, b.nama FROM transaksi AS a INNER JOIN petugas AS b ON a.id_petugas = b.idpetugas WHERE tgl_transaksi >= $from AND tgl_transaksi <= $to AND id_petugas = $kasir");
+      }else{
+        $this->db->query("SELECT a.*, b.nama FROM transaksi AS a INNER JOIN petugas AS b ON a.id_petugas = b.idpetugas WHERE tgl_transaksi >= $from AND tgl_transaksi <= $to");
+      }
+      return $this->db->get_all();
+    }
+
+    public function get_detail_transaksi($id)
+    {
+      $this->db->query("SELECT *, d.nama AS nama_barang, b.nama AS nama_petugas, c.harga AS harga_jual FROM transaksi AS a INNER JOIN petugas AS b ON a.id_petugas = b.idpetugas INNER JOIN detail_transaksi AS c ON c.idtransaksi = a.idtransaksi INNER JOIN barang AS d ON d.idbarang = c.idbarang WHERE a.idtransaksi = $id");
+      return $this->db->get_all();
     }
 
   }

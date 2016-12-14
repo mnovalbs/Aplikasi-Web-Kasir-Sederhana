@@ -6,6 +6,9 @@
     public function index()
     {
       $this->arahLogin();
+      $this->load->view('header');
+      $this->load->view('admin/admin_home');
+      $this->load->view('footer');
     }
 
     public function kategori()
@@ -369,6 +372,197 @@
 
       echo json_encode($arr);
     }
+
+    function add_user()
+    {
+      $this->arahLogin();
+      $this->load->library('input');
+      $this->load->model('admin_model');
+
+      $nama = $this->input->post('nama');
+      $email = $this->input->post('email');
+      $password = $this->input->post('password');
+      $confirm_password = $this->input->post('confirm_password');
+      $kategori = (int)$this->input->post('kategori');
+
+      $arr['success'] = true;
+      $arr['error'] = array();
+
+      if(empty($nama)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Nama harus terisi");
+      }
+
+      if(!preg_match('/^[a-zA-Z ]+$/',$nama)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Nama hanya dapat boleh huruf dan spasi");
+      }
+
+      if(strlen($nama)>50){
+        $arr['success'] = false;
+        array_push($arr['error'], "Nama maksimal 50 karakter");
+      }
+
+      if(empty($email)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Email harus terisi");
+      }else{
+
+        if($this->admin_model->is_petugas_exists($email)!=false){
+          $arr['success'] = false;
+          array_push($arr['error'], "Email sudah terpakai");
+        }
+
+      }
+
+      if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Format Email tidak valid");
+      }
+
+      if(strlen($email)>50){
+        $arr['success'] = false;
+        array_push($arr['error'], "Email terlalu panjang");
+      }
+
+      if(strlen($password)<8){
+        $arr['success'] = false;
+        array_push($arr['error'], "Password minimal terdiri 8 karakter");
+      }
+
+      if($password != $confirm_password){
+        $arr['success'] = false;
+        array_push($arr['error'], "Password konfirmasi tidak cocok");
+      }
+
+      if(empty($kategori)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Kategori user harus terisi");
+      }
+
+      if($arr['success']){
+        $password_salt = sha1(date("Y-m-d H:i:s").rand(1,100).rand(1,100).rand(1,100));
+        $password = sha1($password_salt.$password);
+        $kunci_login = sha1(date("Y-d-d-H-m:i:s").rand(1,100).$password);
+        $this->admin_model->add_user($nama, $email, $password, $password_salt, $kategori, $kunci_login);
+      }
+
+      echo json_encode($arr);
+
+    }
+
+    public function ambil_petugas()
+    {
+      $this->arahLogin();
+      $this->load->library('input');
+      $this->load->model('admin_model');
+
+      $id = (int)$this->input->post('id');
+
+      echo json_encode($this->admin_model->ambil_petugas($id));
+    }
+
+    public function do_edit_user()
+    {
+      $this->arahLogin();
+      $this->load->library('input');
+      $this->load->model('admin_model');
+
+      $id = (int)$this->input->post('id');
+      $nama = $this->input->post('nama');
+      $email = $this->input->post('email');
+      $password = $this->input->post('password');
+      $password_confirm = $this->input->post('password_confirm');
+      $kategori = (int)$this->input->post('kategori');
+
+      $arr['success'] = true;
+      $arr['error'] = array();
+
+      if(empty($nama)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Nama harus terisi");
+      }
+
+      if(!preg_match('/^[a-zA-Z ]+$/',$nama)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Nama hanya dapat boleh huruf dan spasi");
+      }
+
+      if(strlen($nama)>50){
+        $arr['success'] = false;
+        array_push($arr['error'], "Nama maksimal 50 karakter");
+      }
+
+      if(!empty($password)){
+        if(strlen($password)<8){
+          $arr['success'] = false;
+          array_push($arr['error'], "Password minimal terdiri 8 karakter");
+        }
+
+        if($password != $password_confirm){
+          $arr['success'] = false;
+          array_push($arr['error'], "Password konfirmasi tidak cocok");
+        }
+      }
+
+      if(empty($kategori)){
+        $arr['success'] = false;
+        array_push($arr['error'], "Kategori user harus terisi");
+      }
+
+      if($arr['success']){
+        $this->admin_model->do_edit_user($id, $nama, $kategori, $password);
+      }
+
+      echo json_encode($arr);
+
+    }
+
+
+    public function rekap()
+    {
+      $this->arahLogin();
+      $this->load->model('admin_model');
+      $site['custom_title'] = "Rekap";
+      $data['list_petugas'] = $this->admin_model->list_petugas(2);
+      $this->load->view('header',$site);
+      $this->load->view('admin/admin_rekap',$data);
+      $this->load->view('footer');
+    }
+
+    public function cari_rekap()
+    {
+      $this->arahLogin();
+      $this->load->library('input');
+      $this->load->model('admin_model');
+
+      $from = $this->input->post('from')." 00:00:00";
+      $to = $this->input->post('to')." 23:59:59";
+      $kasir = (int)$this->input->post('kasir');
+
+      $transaksi = $this->admin_model->cari_rekap($from, $to, $kasir);
+
+      echo json_encode($transaksi);
+    }
+
+    public function detail_transaksi($id = 0)
+    {
+      $this->arahLogin();
+      $this->load->model('admin_model');
+      $data['detail_transaksi'] = $this->admin_model->get_detail_transaksi($id);
+
+      $this->load->view('admin/admin_detail_transaksi',$data);
+    }
+
+    public function print_transaksi($id = 0)
+    {
+      $this->arahLogin();
+      $this->load->model('admin_model');
+      $data['detail_transaksi'] = $this->admin_model->get_detail_transaksi($id);
+
+      $this->load->view('admin/admin_print_transaksi',$data);
+    }
+
 
   }
 

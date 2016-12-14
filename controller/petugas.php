@@ -194,6 +194,39 @@
       $this->load->view('petugas/petugas_print_transaksi',$data);
     }
 
+    public function rekap()
+    {
+      $this->arahLogin();
+      $site['custom_title'] = "Rekap";
+      $this->load->view('header',$site);
+      $this->load->view('petugas/petugas_rekap');
+      $this->load->view('footer');
+    }
+
+    public function cari_rekap()
+    {
+      $this->arahLogin();
+      $this->load->library('input');
+      $this->load->model('petugas_model');
+
+      $from = $this->input->post('from')." 00:00:00";
+      $to = $this->input->post('to')." 23:59:59";
+      $petugas = $this->petugas_model->get_petugas(get_cookie('petugas'))['idpetugas'];
+
+      $transaksi = $this->petugas_model->cari_rekap($from, $to, $petugas);
+
+      echo json_encode($transaksi);
+    }
+
+    public function detail_transaksi($id = 0)
+    {
+      $this->arahLogin();
+      $this->load->model('petugas_model');
+      $data['detail_transaksi'] = $this->petugas_model->get_detail_transaksi($id);
+
+      $this->load->view('petugas/petugas_detail_transaksi',$data);
+    }
+
   }
 
 ?>

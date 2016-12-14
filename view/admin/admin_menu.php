@@ -12,6 +12,9 @@
     <a href='<?php echo base_url('admin/petugas'); ?>'><i class='fa fa-users'></i> Petugas</a>
   </li>
   <li>
+    <a href='<?php echo base_url('admin/rekap'); ?>'><i class='fa fa-users'></i> Rekap</a>
+  </li>
+  <li>
     <a href='<?php echo base_url('admin/logout'); ?>'><i class='fa fa-sign-out'></i> Logout</a>
   </li>
 </ul>
