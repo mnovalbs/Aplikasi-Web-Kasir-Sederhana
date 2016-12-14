@@ -450,3 +450,47 @@ select.quantity {
     text-align: center;
     margin: 10px 0;
 }
+#list-total{
+    overflow: hidden;
+}
+.total {
+    width: 25%;
+    float: left;
+    text-align: center;
+    padding: 10px;
+}
+.total h2 {
+    font-size: 30px;
+    width: 60px;
+    display: inline-block;
+    height: 60px;
+    line-height: 52px;
+    border: 4px solid #e4e4e4;
+    color: #f5663a;
+    border-radius: 100%;
+    margin: 0px;
+}
+#month-statistic {
+    overflow: hidden;
+    height: 300px;
+    position: relative;
+}
+#month-statistic > div {
+    background: #f00;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+}
+#month-statistic > div span {
+    position: absolute;
+    bottom: 5px;
+    left: 0px;
+    right: 0px;
+    font-size: 10px;
+    background: #fff;
+    width: 15px;
+    height: 15px;
+    margin: 0 auto;
+    line-height: 15px;
+    border-radius: 100%;
+}

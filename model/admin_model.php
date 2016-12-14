@@ -184,4 +184,16 @@
       return $this->db->get_all();
     }
 
+    public function home_total()
+    {
+      $query = $this->db->query(" SELECT (SELECT COUNT(*) FROM barang) AS total_barang, (SELECT COUNT(*) FROM transaksi) AS total_transaksi, (SELECT COUNT(*) FROM kategori) AS total_kategori, (SELECT COUNT(*) FROM petugas WHERE kategori = 1) AS total_admin, (SELECT COUNT(*) FROM petugas WHERE kategori != 1) AS total_kasir ");
+      return $query->fetch_assoc();
+    }
+
+    public function get_day_statistic($y,$m,$d)
+    {
+      $query = $this->db->query("SELECT COUNT(*) AS hasil FROM transaksi WHERE tgl_transaksi LIKE '$y-$m-$d%'");
+      return $query->fetch_assoc();
+    }
+
   }

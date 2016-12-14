@@ -2,7 +2,9 @@
   $this->load->view('admin/admin_menu');
 ?>
   <h3 class='subtitle'>List Petugas</h3>
-  <button onclick='openModal("tambah_user")' type='button'>Tambah User</button>
+  <div class='kotak-cari'>
+    <button onclick='openModal("tambah_user")' type='button'>Tambah User</button>
+  </div>
   <div id='list-petugas'>
   <?php
     foreach ($list_petugas as $petugas) {

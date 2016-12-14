@@ -69,4 +69,11 @@
     }
   }
 
+  function intToStr($num)
+  {
+    $num = (int)$num;
+    if(strlen($num)==1){$num = "0".$num;}
+    return $num;
+  }
+
 ?>

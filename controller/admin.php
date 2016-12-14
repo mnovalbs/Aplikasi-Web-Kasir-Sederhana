@@ -6,9 +6,32 @@
     public function index()
     {
       $this->arahLogin();
+      $this->load->model('admin_model');
+      $data['list_total'] = $this->admin_model->home_total();
+      $data['month_statistic'] = $this->get_month_statistic(date("Y"),date("m"));
+
       $this->load->view('header');
-      $this->load->view('admin/admin_home');
+      $this->load->view('admin/admin_home',$data);
       $this->load->view('footer');
+    }
+
+    protected function get_month_statistic($y,$m)
+    {
+      $this->load->model('admin_model');
+
+      $arr = array();
+      $valid = true;
+      $i = 1;
+
+      while($valid != false){
+        $arr[$i] = $this->admin_model->get_day_statistic($y, $m, intToStr($i))['hasil'];
+        $i++;
+        if(!checkdate($m, $i, $y)){
+          $valid = false;
+        }
+      }
+
+      return $arr;
     }
 
     public function kategori()
